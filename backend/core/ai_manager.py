@@ -33,10 +33,15 @@ class AIManager:
             )
         
         if anthropic_key:
-            self.anthropic_client = ChatAnthropic(
-                anthropic_api_key=anthropic_key,
-                model="claude-3-sonnet-20240229"
-            )
+            try:
+                self.anthropic_client = ChatAnthropic(
+                    anthropic_api_key=anthropic_key,
+                    model="claude-3-sonnet-20240229"
+                )
+            except AttributeError:
+                # Handle missing count_tokens attribute in newer Anthropic versions
+                print("Warning: Anthropic client initialization failed, skipping Anthropic support")
+                self.anthropic_client = None
     
     def _initialize_default_tools(self):
         """Initialize default tools for AI agents"""
